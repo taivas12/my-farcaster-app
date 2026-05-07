@@ -9,6 +9,9 @@ const quotes = [
   "Keep going, greatness is coming! 🚀",
   "Your potential is limitless! 🔥",
   "Today is your day to shine! ☀️",
+  "Success is a journey, not a destination! 🎯",
+  "You've got this! 💥",
+  "Make it happen! 🌊",
 ];
 
 export default function Home() {
@@ -20,7 +23,6 @@ export default function Home() {
   useEffect(() => {
     const initFrame = async () => {
       try {
-        // چک کن آیا داخل Farcaster Frame هستی
         if (typeof window !== 'undefined' && (window as any).frame) {
           const frameContext = await (window as any).frame.context;
           if (frameContext?.user) {
@@ -30,7 +32,7 @@ export default function Home() {
       } catch (err) {
         console.log('Not in Farcaster frame');
       }
-      
+
       const idx = Math.floor(Math.random() * quotes.length);
       setQuote(quotes[idx]);
       setLoading(false);
@@ -54,64 +56,71 @@ export default function Home() {
   const pfpUrl = user?.pfp_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=farcaster';
 
   return (
-    <>
-      <meta property="og:title" content="Daily Motivation" />
-      <meta property="og:description" content="Get your daily motivation with countdown timer!" />
-      <meta property="fc:frame" content="vNext" />
-      <meta property="fc:frame:image" content={`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/og-image.png`} />
-      <meta property="fc:frame:button:1" content="🔄 Get New Quote" />
-      <meta property="fc:frame:post_url" content={`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/frame`} />
-
-      <main style={{
-        backgroundColor: '#0A0A1A',
-        minHeight: '100vh',
-        color: 'white',
-        fontFamily: 'sans-serif',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '24px'
+    <main style={{
+      backgroundColor: '#0A0A1A',
+      minHeight: '100vh',
+      color: 'white',
+      fontFamily: 'sans-serif',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '24px'
+    }}>
+      <div style={{
+        background: '#1a1a2e',
+        borderRadius: '24px',
+        padding: '32px',
+        maxWidth: '400px',
+        width: '100%',
+        textAlign: 'center',
+        boxShadow: '0 8px 32px rgba(124, 58, 237, 0.2)'
       }}>
-        <div style={{
-          background: '#1a1a2e',
-          borderRadius: '24px',
-          padding: '32px',
-          maxWidth: '400px',
-          width: '100%',
-          textAlign: 'center'
-        }}>
-          {!loading && (
-            <>
-              <img
-                src={pfpUrl}
-                style={{ width: '80px', height: '80px', borderRadius: '50%', marginBottom: '16px', border: '3px solid #7c3aed' }}
-                alt={displayName}
-              />
-              <h2 style={{ marginBottom: '8px' }}>👋 Hello, {displayName}!</h2>
-              <div style={{
-                background: '#0A0A1A',
-                borderRadius: '16px',
-                padding: '24px',
-                margin: '24px 0',
-                fontSize: '1.2rem',
-                lineHeight: '1.6'
-              }}>
-                {quote}
-              </div>
-              <p style={{ color: '#aaa', marginBottom: '8px' }}>⏳ Next quote in:</p>
-              <div style={{
-                fontSize: '2.5rem',
-                fontWeight: 'bold',
-                color: '#7c3aed',
-                letterSpacing: '4px'
-              }}>
-                {pad(hours)}:{pad(mins)}:{pad(secs)}
-              </div>
-            </>
-          )}
-        </div>
-      </main>
-    </>
+        {!loading && (
+          <>
+            <img
+              src={pfpUrl}
+              style={{ 
+                width: '80px', 
+                height: '80px', 
+                borderRadius: '50%', 
+                marginBottom: '16px', 
+                border: '3px solid #7c3aed'
+              }}
+              alt={displayName}
+            />
+            <h2 style={{ marginBottom: '8px', fontSize: '1.5rem' }}>
+              👋 Hello, {displayName}!
+            </h2>
+            <div style={{
+              background: '#0A0A1A',
+              borderRadius: '16px',
+              padding: '24px',
+              margin: '24px 0',
+              fontSize: '1.2rem',
+              lineHeight: '1.6',
+              minHeight: '80px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              {quote}
+            </div>
+            <p style={{ color: '#aaa', marginBottom: '8px', fontSize: '0.9rem' }}>
+              ⏳ Next quote in:
+            </p>
+            <div style={{
+              fontSize: '2.5rem',
+              fontWeight: 'bold',
+              color: '#7c3aed',
+              letterSpacing: '4px',
+              fontFamily: 'monospace'
+            }}>
+              {pad(hours)}:{pad(mins)}:{pad(secs)}
+            </div>
+          </>
+        )}
+      </div>
+    </main>
   );
 }
