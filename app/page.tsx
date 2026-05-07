@@ -21,6 +21,25 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Add meta tags for Farcaster Frame
+    if (typeof document !== 'undefined') {
+      const tags = [
+        { property: 'fc:frame', content: 'vNext' },
+        { property: 'fc:frame:image', content: 'https://my-farcaster-52dj7cmg-taivas12s-projects.vercel.app/' },
+        { property: 'fc:frame:post_url', content: 'https://my-farcaster-52dj7cmg-taivas12s-projects.vercel.app/api/frame' },
+        { property: 'fc:frame:button:1', content: '🔄 New Quote' },
+        { property: 'og:title', content: 'Daily Motivation Check-In' },
+        { property: 'og:description', content: 'Get your personalized quote + 24h countdown' },
+      ];
+
+      tags.forEach(tag => {
+        const meta = document.createElement('meta');
+        meta.setAttribute('property', tag.property);
+        meta.content = tag.content;
+        document.head.appendChild(meta);
+      });
+    }
+
     const initFrame = async () => {
       try {
         if (typeof window !== 'undefined' && (window as any).frame) {
