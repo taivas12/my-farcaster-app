@@ -1,4 +1,34 @@
+'use client';
+import { useState, useEffect } from 'react';
+
+const quotes = [
+  "You are stronger than you think! 💪",
+  "Every day is a new opportunity! 🌟",
+  "Believe in yourself and magic happens! ✨",
+  "You are amazing just as you are! 🌈",
+  "Keep going, greatness is coming! 🚀",
+  "Your potential is limitless! 🔥",
+  "Today is your day to shine! ☀️",
+];
+
 export default function Home() {
+  const [timeLeft, setTimeLeft] = useState(86400);
+  const [quote, setQuote] = useState(quotes[0]);
+
+  useEffect(() => {
+    const idx = Math.floor(Math.random() * quotes.length);
+    setQuote(quotes[idx]);
+    const timer = setInterval(() => {
+      setTimeLeft(t => t > 0 ? t - 1 : 86400);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const hours = Math.floor(timeLeft / 3600);
+  const mins = Math.floor((timeLeft % 3600) / 60);
+  const secs = timeLeft % 60;
+  const pad = (n: number) => String(n).padStart(2, '0');
+
   return (
     <main style={{
       backgroundColor: '#0A0A1A',
@@ -8,69 +38,41 @@ export default function Home() {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+      justifyContent: 'center',
       padding: '24px'
     }}>
-      <h1 style={{ fontSize: '2rem', marginBottom: '8px' }}>🪙 My Tip App</h1>
-      <p style={{ color: '#aaa', marginBottom: '32px' }}>Lock. Tip. Earn.</p>
-
       <div style={{
         background: '#1a1a2e',
-        borderRadius: '16px',
-        padding: '24px',
-        width: '100%',
+        borderRadius: '24px',
+        padding: '32px',
         maxWidth: '400px',
-        marginBottom: '16px'
-      }}>
-        <h2>💰 Your Balance</h2>
-        <p style={{ fontSize: '2rem', color: '#00ff88' }}>1,000 UCI</p>
-      </div>
-
-      <div style={{
-        background: '#1a1a2e',
-        borderRadius: '16px',
-        padding: '24px',
         width: '100%',
-        maxWidth: '400px',
-        marginBottom: '16px'
+        textAlign: 'center'
       }}>
-        <h2>🔒 Lock Tokens</h2>
-        <input
-          type="number"
-          placeholder="Amount to lock..."
-          style={{
-            width: '100%',
-            padding: '12px',
-            borderRadius: '8px',
-            border: 'none',
-            background: '#0A0A1A',
-            color: 'white',
-            fontSize: '1rem',
-            marginBottom: '12px'
-          }}
+        <img
+          src="https://api.dicebear.com/7.x/avataaars/svg?seed=farcaster"
+          style={{ width: '80px', height: '80px', borderRadius: '50%', marginBottom: '16px' }}
         />
-        <button style={{
-          width: '100%',
-          padding: '12px',
-          borderRadius: '8px',
-          border: 'none',
-          background: '#7c3aed',
-          color: 'white',
-          fontSize: '1rem',
-          cursor: 'pointer'
+        <h2 style={{ marginBottom: '8px' }}>👋 Hello, Caster!</h2>
+        <div style={{
+          background: '#0A0A1A',
+          borderRadius: '16px',
+          padding: '24px',
+          margin: '24px 0',
+          fontSize: '1.2rem',
+          lineHeight: '1.6'
         }}>
-          Lock Tokens 🔒
-        </button>
-      </div>
-
-      <div style={{
-        background: '#1a1a2e',
-        borderRadius: '16px',
-        padding: '24px',
-        width: '100%',
-        maxWidth: '400px'
-      }}>
-        <h2>🎁 Daily Allowance</h2>
-        <p style={{ fontSize: '1.5rem', color: '#f59e0b' }}>87 UCI / day</p>
+          {quote}
+        </div>
+        <p style={{ color: '#aaa', marginBottom: '8px' }}>⏳ Next quote in:</p>
+        <div style={{
+          fontSize: '2.5rem',
+          fontWeight: 'bold',
+          color: '#7c3aed',
+          letterSpacing: '4px'
+        }}>
+          {pad(hours)}:{pad(mins)}:{pad(secs)}
+        </div>
       </div>
     </main>
   );
