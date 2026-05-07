@@ -11,13 +11,36 @@ const quotes = [
   "Today is your day to shine! ☀️",
 ];
 
+type FrameContext = {
+  user?: {
+    username?: string;
+    display_name?: string;
+    pfp_url?: string;
+  };
+};
+
 export default function Home() {
+  const [user, setUser] = useState<FrameContext['user'] | null>(null);
   const [timeLeft, setTimeLeft] = useState(86400);
   const [quote, setQuote] = useState(quotes[0]);
 
   useEffect(() => {
+    // دریافت اطلاعات کاربر از Farcaster
+    const fetchUser = async () => {
+      try {
+        const frameContext = (window as any).frameContext;
+        if (frameContext?.user) {
+          setUser(frameContext.user);
+        }
+      } catch (err) {
+        console.log('Farcaster context not available');
+      }
+    };
+
+    fetchUser();
     const idx = Math.floor(Math.random() * quotes.length);
     setQuote(quotes[idx]);
+    
     const timer = setInterval(() => {
       setTimeLeft(t => t > 0 ? t - 1 : 86400);
     }, 1000);
@@ -28,6 +51,9 @@ export default function Home() {
   const mins = Math.floor((timeLeft % 3600) / 60);
   const secs = timeLeft % 60;
   const pad = (n: number) => String(n).padStart(2, '0');
+
+  const displayName = user?.display_name || user?.username || 'Caster';
+  const pfpUrl = user?.pfp_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=farcaster';
 
   return (
     <main style={{
@@ -50,10 +76,11 @@ export default function Home() {
         textAlign: 'center'
       }}>
         <img
-          src="https://api.dicebear.com/7.x/avataaars/svg?seed=farcaster"
-          style={{ width: '80px', height: '80px', borderRadius: '50%', marginBottom: '16px' }}
+          src={pfpUrl}
+          style={{ width: '80px', height: '80px', borderRadius: '50%', marginBottom: '16px', border: '3px solid #7c3aed' }}
+          alt={displayName}
         />
-        <h2 style={{ marginBottom: '8px' }}>👋 Hello, Caster!</h2>
+        <h2 style={{ marginBottom: '8px' }}>👋 Hello, {displayName}!</h2>
         <div style={{
           background: '#0A0A1A',
           borderRadius: '16px',
